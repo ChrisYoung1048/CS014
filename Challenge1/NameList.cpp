@@ -44,7 +44,7 @@ void NameList::CommitJosephus(int n, int p, int k) {
                 curNode = dummyHead->next;
             } else {
                 curNode = curNode->next;  
-            }  
+            }   
         }
 
         StrNode* prevNode = curNode->prev;
@@ -54,6 +54,9 @@ void NameList::CommitJosephus(int n, int p, int k) {
 
         delete curNode;
         curNode = sucNode;
+        if (curNode == dummyTail || curNode == dummyHead) {
+            curNode = dummyHead->next;
+        }
         n--;
         //printAll();
     }
