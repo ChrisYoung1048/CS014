@@ -12,11 +12,33 @@ arithmeticExpression::arithmeticExpression(const string &data) {
 }
 
 void arithmeticExpression::buildTree() {
-    cout << "**NOT IMPLEMENTED" << endl;
+    string postfixExpression = infix_to_postfix();
+    //cout << "postfixExpression: " << postfixExpression << endl;
+    stack<TreeNode *> s;
+    for (unsigned i = 0; i < postfixExpression.size(); i++) { //if the priority of the char is 0 (is a variable)
+        if (priority(postfixExpression.at(i)) == 0)
+          s.push(new TreeNode(postfixExpression.at(i), 0));
+        else { //if the priority of the char is >0 (is an operator)
+            TreeNode *rootSubTree = new TreeNode(postfixExpression.at(i), 0);
+            rootSubTree->right = s.top();
+            s.pop();
+            rootSubTree->left = s.top();
+            s.pop();
+
+            s.push(rootSubTree);
+        }
+
+    }
+    root = s.top();
+    // cout << endl << root->data;
+    // cout << root->left->data;
+    // cout << root->right->data;
+    // cout << root->right->left->data;
+    // cout << root->right->right->data;
 }
 
 void arithmeticExpression::infix() {
-    cout << "**NOT IMPLEMENTED" << endl;
+    infix(root);
 }
 
 void arithmeticExpression::prefix() {
@@ -99,16 +121,24 @@ string arithmeticExpression::infix_to_postfix(){
 }
 
 void arithmeticExpression::infix(TreeNode *node) {
-    cout << "**NOT IMPLEMENTED" << endl;
+    if (node->left != nullptr) {
+        cout << "(";
+        infix(node->left);
+    }
+    cout << node->data;
+    if (node->right != nullptr) {
+        infix(node->right);
+        cout << ")";
+    }
 }
 
 void arithmeticExpression::prefix(TreeNode *node) {
-    cout << node->key;
+    cout << node->data;
     if (node->left != nullptr) {
-        postfix(node->left);
+        prefix(node->left);
     } 
     if (node->right != nullptr) {
-        postfix(node->right);
+        prefix(node->right);
     }
 }
 
@@ -119,7 +149,7 @@ void arithmeticExpression::postfix(TreeNode *node) {
     if (node->right != nullptr) {
         postfix(node->right);
     } 
-    cout << node->key;
+    cout << node->data;
 }
 
 void arithmeticExpression::visualizeTree(ofstream &outputFilename, TreeNode *node) {
